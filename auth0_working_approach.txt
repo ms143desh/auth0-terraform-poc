@@ -1,0 +1,48 @@
+Two approaches can be used for user creation:
+	1. Create in Auth0 database and then store it in custom database. Using this we will not be able to store password in our database.
+	2. Create in custom database and then create it in Auth0 database. Using this we will be able to store password in our database.
+
+Approach 1: Create in Auth0 database and then store it in custom database.
+
+Create Regular Web Application
+	Allowed Callback URL's = http://localhost:3000/login/oauth2/code/auth0
+	Allowed Logout URL's = http://localhost:3000
+	
+	issuer-uri = domain,
+	client-id
+	client-secret
+Update security config and logout handler as per requirement
+Update UI design as per requirement	
+
+Create different flows for signup and signin
+	Custom Pre registration flow
+		This is required for email domain validations
+		Either we can provide database connection and read records from database
+		Or we can provide an API to have list of registered domains and then validate. Giving API seems more safe.
+	Custom post registration flow
+		This is required to save the user information in custom database. Two ways:
+		1. Create API to take only user_id and then call the Auth0 management API to get all the details of user and then save it to custom database
+			This depends on Auth0 Management API
+		2. Create API to pass all the details of user and then save it to custom database.
+	Custom login flow
+		This is required to update the user information every time user login.
+		Either pass the user_id or complete user information to store it in the database.
+
+
+Approach 2: Create in custom database and then create it in Auth0 database.
+This can be achieved with Auth0 Management API
+
+Create Machine to Machine application
+	Provide Auth0 Management API and required permissions, this is required for token generation
+	
+	issuer-uri = domain,
+	client-id
+	client-secret
+	Use credentials to generate token
+	Call specific Auth0 APIs for particular action - https://auth0.com/docs/api/management/v2/#!/Users/get_users
+	
+
+
+Other options like custom database integration, rules
+We can manage Resource server (API), Roles & permissions using Auth0 Management APIs
+	
